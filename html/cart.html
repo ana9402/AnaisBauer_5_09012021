@@ -50,8 +50,61 @@
         </header>
         <!--------- END Header --------->
 
+        <!------ START Previous ------>
+        <div class="container mt-5 mb-5 d-flex align-items-center">
+            <a href="index.html" class="link-dark">
+                <i class="bi bi-arrow-left-circle fs-4 me-3"></i>
+            </a>
+            <span class="fw-light">Retour à l'accueil</span>
+        </div>
+        <!------ END Previous ------>
+
         <!--------- START Main --------->
-            <main>
+            <main class="mt-5 mb-5" id="">
+                <div class="container">
+                    <div class="row g-4">
+                        <div class="col-12 col-lg-8">
+                            <div class="shadow p-4">
+                                <h1 class="fs-2 mb-4">Mon panier</h1>
+                                <p>Votre panier est vide.</p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <div class="shadow p-4">
+                                <h2 class="mb-4">Paiement</h2>
+                                <form class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="first-name" class="form-label">Prénom *</label>
+                                        <input type="text" class="form-control" id="first-name" placeholder="Eric">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="last-name" class="form-label">Nom *</label>
+                                        <input type="text" class="form-control" id="last-name" placeholder="Dupont">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="email-adress" class="form-label">E-mail *</label>
+                                        <input type="email" class="form-control" id="email-adress" placeholder="exemple@gmail.com">
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="adress" class="form-label">Adresse postale *</label>
+                                        <input type="text" class="form-control" id="adress" placeholder="5 Avenue Anatole France">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="zip-code" class="form-label">Code postal *</label>
+                                        <input type="number" class="form-control" id="zip-code" placeholder="75007">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="city" class="form-label">Ville *</label>
+                                        <input type="text" class="form-control" id="city" placeholder="Paris">
+                                    </div>
+                                    <div class="mt-5">
+                                        <button type="submit" class="btn btn-dark">Valider ma commande</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </main>
         <!--------- END Main --------->
 
