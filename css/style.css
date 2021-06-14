@@ -1,4 +1,10 @@
+/* PARAMETRES GENERAUX DU SITE */
 * {
     padding: 0;
     margin: 0;
+    object-fit: cover;
+}
+
+#bloc-1-hero img {
+    height: 500px;
 }
