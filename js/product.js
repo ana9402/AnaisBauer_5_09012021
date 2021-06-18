@@ -63,3 +63,34 @@ fetch("http://localhost:3000/api/cameras/" + productId)
 
      productInfosContainer.appendChild(productBuyButton);
 })
+.catch(
+    function(error) {
+
+        ////// Création d'une div avec une classe col
+        let col = document.createElement('div');
+        col.classList.add('col', 'text-center', 'bg-light', 'text-secondary', 'p-4', 'border')
+
+        let errorContainer = document.getElementById('product-container');
+        errorContainer.appendChild(col);
+
+        ////// Création d'un paragraphe pour l'icone du message d'erreur
+        let errorIcon = document.createElement('p')
+        errorIcon.classList.add('fs-1')
+        errorIcon.innerHTML = "<i class=\"bi bi-emoji-frown-fill\"></i>";
+
+        col.appendChild(errorIcon);
+
+        ////// Création d'un h2 pour le titre du message d'erreur
+        let errorTitle = document.createElement('h2')
+        errorTitle.classList.add('fs-3');
+        errorTitle.innerHTML = "Oups, une erreur est survenue.";
+
+        col.appendChild(errorTitle)
+
+        ////// Création d'un paragraphe pour le contenu du message d'erreur
+        let errorContent = document.createElement('p');
+        errorContent.innerHTML = "Notre site rencontre actuellement un problème lié au serveur.<br> Nous vous prions de nous excuser pour la gêne occasionnée et vous invitons à réessayer ultérieurement.";
+
+        col.appendChild(errorContent);
+    }
+);
