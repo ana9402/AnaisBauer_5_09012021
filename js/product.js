@@ -51,10 +51,36 @@ fetch("http://localhost:3000/api/cameras/" + productId)
 
      ////// Création d'un p pour le prix
      let productPrice  = document.createElement('p');
-     productPrice.classList.add('fs-4');
+     productPrice.classList.add('fs-4', 'mb-5');
      productPrice.innerText = data.price/100 + " €";
 
      productInfosContainer.appendChild(productPrice);
+
+     ////// Création d'une liste déroulante pour les options
+     let optionForm = document.createElement('form');
+     optionForm.classList.add('mb-4')
+
+     productInfosContainer.appendChild(optionForm);
+
+     let optionLabel = document.createElement('label');
+     optionLabel.classList.add('me-3')
+     optionLabel.innerText = "Personnalisez la lentille :"
+
+     optionForm.appendChild(optionLabel);
+
+     let optionSelect = document.createElement('select');
+
+     optionForm.appendChild(optionSelect);
+
+     // affichage des options
+    for (i = 0; i < data.lenses.length; i++) {
+        let optionElement = document.createElement('option');
+        optionElement.innerText = data.lenses[i];
+        optionElement.value = data.lenses[i];
+
+        optionSelect.appendChild(optionElement);
+    }
+
 
      ////// Création d'un bouton 
      let productBuyButton = document.createElement('button');
