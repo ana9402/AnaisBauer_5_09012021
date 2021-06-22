@@ -27,7 +27,7 @@ fetch("http://localhost:3000/api/cameras/" + productId)
 
     /// Création d'une img
     let productImage = document.createElement('img');
-    productImage.classList.add('w-100')
+    productImage.classList.add('w-100', 'h-100')
     productImage.src = data.imageUrl;
 
     productImageContainer.appendChild(productImage);
