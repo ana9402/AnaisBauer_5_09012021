@@ -1,11 +1,11 @@
-// Récupération de l'ID de l'article dans l'URL
+// --------------- Récupération de l'ID de l'article dans l'URL ---------------
 const queryString = window.location.search;
 console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 const productId = urlParams.get('id');
 console.log(productId);
 
-// Récupération des données de l'API
+// --------------- Récupération des données de l'API ---------------
 fetch("http://localhost:3000/api/cameras/" + productId)
 .then(
     function(result) {
@@ -16,79 +16,116 @@ fetch("http://localhost:3000/api/cameras/" + productId)
 )
 .then(data => {
 
-     ////// Création d'une div pour la colonne de l'image
-     let productImageContainer = document.createElement('div');
-     productImageContainer.classList.add('col-md-7', 'p-0');
+    // --------------- Mise en forme du produit ---------------
 
-     let productContainer = document.getElementById('product-container');
-     productContainer.appendChild(productImageContainer);
+    /// Création d'une div pour la colonne de l'image
+    let productImageContainer = document.createElement('div');
+    productImageContainer.classList.add('col-md-7', 'p-0');
 
-     ////// Création d'une img
-     let productImage = document.createElement('img');
-     productImage.classList.add('w-100')
-     productImage.src = data.imageUrl;
+    let productContainer = document.getElementById('product-container');
+    productContainer.appendChild(productImageContainer);
 
-     productImageContainer.appendChild(productImage);
+    /// Création d'une img
+    let productImage = document.createElement('img');
+    productImage.classList.add('w-100')
+    productImage.src = data.imageUrl;
 
-     ////// Création d'une div pour la colonne infos
-     let productInfosContainer = document.createElement('div');
-     productInfosContainer.classList.add('col-md-5', 'p-5');
+    productImageContainer.appendChild(productImage);
 
-     productContainer.appendChild(productInfosContainer);
+    /// Création d'une div pour la colonne infos
+    let productInfosContainer = document.createElement('div');
+    productInfosContainer.classList.add('col-md-5', 'p-5');
 
-     ////// Création d'un h1 pour le titre de l'article
-     let productHeading = document.createElement('h1');
-     productHeading.classList.add('mb-4')
-     productHeading.innerText = data.name;
-     
-     productInfosContainer.appendChild(productHeading);
+    productContainer.appendChild(productInfosContainer);
 
-     ////// Création d'un p pour la description
-     let productDescription = document.createElement('p');
-     productDescription.innerText = data.description;
+    /// Création d'un h1 pour le titre de l'article
+    let productHeading = document.createElement('h1');
+    productHeading.classList.add('mb-4')
+    productHeading.innerText = data.name;
+    
+    productInfosContainer.appendChild(productHeading);
 
-     productInfosContainer.appendChild(productDescription);
+    /// Création d'un p pour la description
+    let productDescription = document.createElement('p');
+    productDescription.innerText = data.description;
 
-     ////// Création d'un p pour le prix
-     let productPrice  = document.createElement('p');
-     productPrice.classList.add('fs-4', 'mb-5');
-     productPrice.innerText = data.price/100 + " €";
+    productInfosContainer.appendChild(productDescription);
 
-     productInfosContainer.appendChild(productPrice);
+    /// Création d'un p pour le prix
+    let productPrice  = document.createElement('p');
+    productPrice.classList.add('fs-4', 'mb-5');
+    productPrice.innerText = data.price/100 + " €";
 
-     ////// Création d'une liste déroulante pour les options
-     let optionForm = document.createElement('form');
-     optionForm.classList.add('mb-4')
+    productInfosContainer.appendChild(productPrice);
 
-     productInfosContainer.appendChild(optionForm);
+    /// Création d'une liste déroulante pour les options
+    let optionForm = document.createElement('form');
+    optionForm.classList.add('mb-4')
 
-     let optionLabel = document.createElement('label');
-     optionLabel.classList.add('me-3')
-     optionLabel.innerText = "Personnalisez la lentille :"
+    productInfosContainer.appendChild(optionForm);
 
-     optionForm.appendChild(optionLabel);
+    let optionLabel = document.createElement('label');
+    optionLabel.classList.add('me-3')
+    optionLabel.innerText = "Personnalisez la lentille :"
 
-     let optionSelect = document.createElement('select');
+    optionForm.appendChild(optionLabel);
 
-     optionForm.appendChild(optionSelect);
+    let optionSelect = document.createElement('select');
 
-     // affichage des options
+    optionForm.appendChild(optionSelect);
+
+    /// affichage des options
     for (i = 0; i < data.lenses.length; i++) {
-        let optionElement = document.createElement('option');
-        optionElement.innerText = data.lenses[i];
-        optionElement.value = data.lenses[i];
+    let optionElement = document.createElement('option');
+    optionElement.innerText = data.lenses[i];
+    optionElement.value = data.lenses[i];
 
-        optionSelect.appendChild(optionElement);
-    }
+    optionSelect.appendChild(optionElement);
+}
 
 
-     ////// Création d'un bouton 
-     let productBuyButton = document.createElement('button');
-     productBuyButton.classList.add('btn', 'btn-lg', 'btn-dark', 'text-white', 'btn-outline-secondary',);
-     productBuyButton.innerText = "Ajouter au panier";
+    /// Création d'un bouton 
+    let productBuyButton = document.createElement('button');
+    productBuyButton.classList.add('btn', 'btn-lg', 'btn-dark', 'text-white', 'btn-outline-secondary',);
+    productBuyButton.id = "add-to-cart-btn"
+    productBuyButton.innerText = "Ajouter au panier";
 
-     productInfosContainer.appendChild(productBuyButton);
+    productInfosContainer.appendChild(productBuyButton);
+
+
+    // --------------- Ajout des articles dans le panier ---------------
+
+    let selectedProduct = {
+        productImage: data.imageUrl,
+        productName: data.name,
+        productId: data._id,
+        productPrice: data.price /100 + " €"
+    };
+
+    // création d'un événement au clic sur le bouton
+    productBuyButton.addEventListener('click', function() {
+
+        let productInLocalStorage = JSON.parse(localStorage.getItem('product'));
+
+        /// s'il y a des produits dans le local storage
+        if (productInLocalStorage) {
+            productInLocalStorage.push(selectedProduct);
+            localStorage.setItem('product', JSON.stringify(productInLocalStorage));
+            alert("L'article a bien été ajouté au panier");
+
+        } 
+        /// s'il n'y a pas de produit dans le local storage
+        else {
+            productInLocalStorage = [];
+            productInLocalStorage.push(selectedProduct);
+            localStorage.setItem('product', JSON.stringify(productInLocalStorage));
+            alert("L'article a bien été ajouté au panier");
+            console.log(productInLocalStorage);
+        }
+    })
 })
+
+/// --------- Configuration du message d'erreur ---------
 .catch(
     function(error) {
 
