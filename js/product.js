@@ -98,6 +98,7 @@ fetch("http://localhost:3000/api/cameras/" + productId)
     let selectedProduct = {
         productImage: data.imageUrl,
         productName: data.name,
+        productDescription: data.description,
         productId: data._id,
         productPrice: data.price /100 + " €"
     };
