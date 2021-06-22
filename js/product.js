@@ -105,20 +105,20 @@ fetch("http://localhost:3000/api/cameras/" + productId)
     // création d'un événement au clic sur le bouton
     productBuyButton.addEventListener('click', function() {
 
-        let productInLocalStorage = JSON.parse(localStorage.getItem('product'));
+        let productsInCart = JSON.parse(localStorage.getItem('product'));
 
         /// s'il y a des produits dans le local storage
-        if (productInLocalStorage) {
-            productInLocalStorage.push(selectedProduct);
-            localStorage.setItem('product', JSON.stringify(productInLocalStorage));
+        if (productsInCart) {
+            productsInCart.push(selectedProduct);
+            localStorage.setItem('product', JSON.stringify(productsInCart));
             alert("L'article a bien été ajouté au panier");
 
         } 
         /// s'il n'y a pas de produit dans le local storage
         else {
-            productInLocalStorage = [];
-            productInLocalStorage.push(selectedProduct);
-            localStorage.setItem('product', JSON.stringify(productInLocalStorage));
+            productsInCart = [];
+            productsInCart.push(selectedProduct);
+            localStorage.setItem('product', JSON.stringify(productsInCart));
             alert("L'article a bien été ajouté au panier");
             console.log(productInLocalStorage);
         }
