@@ -51,10 +51,8 @@ else {
 
         let productPrice = document.createElement('p');
         productPrice.classList.add('fs-6')
-        productPrice.innerText = productsInCart[k].productPrice;
+        productPrice.innerText = productsInCart[k].productPrice * productsInCart[k].productQuantity + "€ ";
         productInfosContainer.appendChild(productPrice);
-
-        console.log(productsInCart.length);
         
     }
 }

@@ -54,7 +54,7 @@ fetch("http://localhost:3000/api/cameras/" + productId)
     /// Création d'un p pour le prix
     let productPrice  = document.createElement('p');
     productPrice.classList.add('fs-4', 'mb-5');
-    productPrice.innerText = data.price/100 + " €";
+    productPrice.innerText = data.price/100 + "€";
 
     productInfosContainer.appendChild(productPrice);
 
@@ -101,7 +101,7 @@ fetch("http://localhost:3000/api/cameras/" + productId)
         productDescription: data.description,
         productId: data._id,
         productQuantity: 1,
-        productPrice: data.price /100 + " €"
+        productPrice: data.price /100
     };
 
     // création d'un événement au clic sur le bouton
@@ -121,6 +121,7 @@ fetch("http://localhost:3000/api/cameras/" + productId)
         /// s'il y a des produits dans le local storage
         else {
             let alreadyInCart = false;
+
             //// Si le produit sélectionné est déjà présent dans le panier
             for (j = 0; j < productsInCart.length; j++) {
                 
@@ -130,13 +131,14 @@ fetch("http://localhost:3000/api/cameras/" + productId)
                     location.reload();
                     break;
                 }
-
             }
+
             //// Si le produit sélectionné n'est pas présent dans le panier
             if (!alreadyInCart) {
 
                 productsInCart.push(selectedProduct);
                 localStorage.setItem('product', JSON.stringify(productsInCart));
+                
             }
 
             alert("Le produit a bien été ajouté au panier !")
