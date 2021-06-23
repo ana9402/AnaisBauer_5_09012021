@@ -100,6 +100,7 @@ fetch("http://localhost:3000/api/cameras/" + productId)
         productName: data.name,
         productDescription: data.description,
         productId: data._id,
+        productQuantity: 1,
         productPrice: data.price /100 + " €"
     };
 
@@ -108,22 +109,40 @@ fetch("http://localhost:3000/api/cameras/" + productId)
 
         let productsInCart = JSON.parse(localStorage.getItem('product'));
 
-        /// s'il y a des produits dans le local storage
-        if (productsInCart) {
-            productsInCart.push(selectedProduct);
-            localStorage.setItem('product', JSON.stringify(productsInCart));
-            alert("L'article a bien été ajouté au panier");
-
-        } 
         /// s'il n'y a pas de produit dans le local storage
-        else {
+        if (productsInCart === null) {
             productsInCart = [];
             productsInCart.push(selectedProduct);
             localStorage.setItem('product', JSON.stringify(productsInCart));
             alert("L'article a bien été ajouté au panier");
-            console.log(productInLocalStorage);
+            location.reload();
         }
-    })
+
+        /// s'il y a des produits dans le local storage
+        else {
+            let alreadyInCart = false;
+            //// Si le produit sélectionné est déjà présent dans le panier
+            for (j = 0; j < productsInCart.length; j++) {
+                
+                if (selectedProduct.productId == productsInCart[j].productId) {
+                    productsInCart[j].productQuantity++;
+                    alreadyInCart = true;
+                    location.reload();
+                    break;
+                }
+
+            }
+            //// Si le produit sélectionné n'est pas présent dans le panier
+            if (!alreadyInCart) {
+
+                productsInCart.push(selectedProduct);
+                localStorage.setItem('product', JSON.stringify(productsInCart));
+            }
+
+            alert("Le produit a bien été ajouté au panier !")
+            localStorage.setItem('product', JSON.stringify(productsInCart));
+        } 
+    });
 })
 
 /// --------- Configuration du message d'erreur ---------

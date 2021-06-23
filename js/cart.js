@@ -46,7 +46,7 @@ else {
         productInfosContainer.appendChild(productDescription);
 
         let productQuantity = document.createElement('p');
-        productQuantity.innerText = "Quantité : ";
+        productQuantity.innerText = "Quantité : " + productsInCart[k].productQuantity;
         productInfosContainer.appendChild(productQuantity);
 
         let productPrice = document.createElement('p');
@@ -55,6 +55,6 @@ else {
         productInfosContainer.appendChild(productPrice);
 
         console.log(productsInCart.length);
-        ;
+        
     }
 }
