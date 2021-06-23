@@ -14,7 +14,7 @@ if (productsInCart === null) {
 else {
 
     let cartContainer = document.getElementById('cart-container');
-
+    
     for (k = 0; k < productsInCart.length; k++) {
 
         let productLine = document.createElement('div');
@@ -49,10 +49,26 @@ else {
         productQuantity.innerText = "Quantité : " + productsInCart[k].productQuantity;
         productInfosContainer.appendChild(productQuantity);
 
+        let totalPerProduct = (productsInCart[k].productPrice * productsInCart[k].productQuantity)
+
         let productPrice = document.createElement('p');
         productPrice.classList.add('fs-6')
-        productPrice.innerText = productsInCart[k].productPrice * productsInCart[k].productQuantity + "€ ";
+        productPrice.innerText = totalPerProduct + "€ ";
         productInfosContainer.appendChild(productPrice);
         
     }
+
+    // Calcul et affichage du montant total du panier
+    let totalCart = 0;
+    for (let l = 0; l < productsInCart.length; l++) {
+        totalCart = totalCart + (productsInCart[l].productPrice * productsInCart[l].productQuantity);
+    }
+
+    let totalCartSum = document.createElement('p')
+    totalCartSum.classList.add('pt-5', 'fw-bold', 'fs-5')
+    totalCartSum.innerText = "Total du panier : " + totalCart + " €";
+    cartContainer.appendChild(totalCartSum);
+
+
+
 }
