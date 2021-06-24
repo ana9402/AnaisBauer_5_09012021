@@ -2,61 +2,77 @@ let productsInCart = JSON.parse(localStorage.getItem('product'));
 
 //------------------------- AFFICHAGE DES PRODUITS DANS LE  PANIER -------------------------
 
-// Si le localStorage est vide
-if (productsInCart === null) {
-    let cartContainer = document.getElementById('cart-container');
+let cartContainer = document.getElementById('cart-container');
 
-    let emptyCart = document.createElement('p');
-    emptyCart.innerText = 'Votre panier est vide.';
-    cartContainer.appendChild(emptyCart);
-} 
-// Si le localStorage contient des produits
-else {
-
-    let cartContainer = document.getElementById('cart-container');
-    
-    for (k = 0; k < productsInCart.length; k++) {
-
-        let productLine = document.createElement('div');
-        productLine.classList.add('row', 'd-flex', 'border');
-        cartContainer.appendChild(productLine);
-
-        // Colonne IMG
-        let productImgContainer = document.createElement('div');
-        productImgContainer.classList.add('col-md-4', 'p-0')
-        productLine.appendChild(productImgContainer);
-
-        let productImg = document.createElement('img');
-        productImg.classList.add('h-100', 'w-100');
-        productImg.src = productsInCart[k].productImage;
-        productImgContainer.appendChild(productImg);
-
-        // Colonne INFOS
-        let productInfosContainer = document.createElement('div')
-        productInfosContainer.classList.add('col', 'p-3')
-        productLine.appendChild(productInfosContainer);
-
-        let productName = document.createElement('h3');
-        productName.classList.add('fs-5', 'fw-bold')
-        productName.innerText = productsInCart[k].productName;
-        productInfosContainer.appendChild(productName);
-
-        let productDescription = document.createElement('p');
-        productDescription.innerText = productsInCart[k].productDescription;
-        productInfosContainer.appendChild(productDescription);
-
-        let productQuantity = document.createElement('p');
-        productQuantity.innerText = "Quantité : " + productsInCart[k].productQuantity;
-        productInfosContainer.appendChild(productQuantity);
-
-        let totalPerProduct = (productsInCart[k].productPrice * productsInCart[k].productQuantity)
-
-        let productPrice = document.createElement('p');
-        productPrice.classList.add('fs-6')
-        productPrice.innerText = totalPerProduct + "€ ";
-        productInfosContainer.appendChild(productPrice);
+function cartDisplay() {
+    // Si le localStorage est vide ----------
+    if (productsInCart === null || productsInCart.length === 0) {
         
-    }
+        let emptyCart = document.createElement('p');
+        emptyCart.innerText = 'Votre panier est vide.';
+        cartContainer.appendChild(emptyCart);
+    } 
+    // Si le localStorage contient des produits ----------
+    else {
+        
+        for (k = 0; k < productsInCart.length; k++) {
+
+            let productLine = document.createElement('div');
+            productLine.classList.add('row', 'd-flex', 'border');
+            cartContainer.appendChild(productLine);
+
+            // Colonne IMG ---
+            let productImgContainer = document.createElement('div');
+            productImgContainer.classList.add('col-md-4', 'p-0')
+            productLine.appendChild(productImgContainer);
+
+            let productImg = document.createElement('img');
+            productImg.classList.add('h-100', 'w-100');
+            productImg.src = productsInCart[k].productImage;
+            productImgContainer.appendChild(productImg);
+
+            // Colonne INFOS ---
+            let productInfosContainer = document.createElement('div')
+            productInfosContainer.classList.add('col', 'p-3')
+            productLine.appendChild(productInfosContainer);
+
+            let productName = document.createElement('h3');
+            productName.classList.add('fs-5', 'fw-bold')
+            productName.innerText = productsInCart[k].productName;
+            productInfosContainer.appendChild(productName);
+
+            let productDescription = document.createElement('p');
+            productDescription.innerText = productsInCart[k].productDescription;
+            productInfosContainer.appendChild(productDescription);
+
+            let productQuantity = document.createElement('p');
+            productQuantity.innerText = "Quantité : " + productsInCart[k].productQuantity;
+            productInfosContainer.appendChild(productQuantity);
+
+            let totalPerProduct = (productsInCart[k].productPrice * productsInCart[k].productQuantity)
+
+            let bottomProductLine = document.createElement('div');
+            bottomProductLine.classList.add('row')
+            productInfosContainer.appendChild(bottomProductLine)
+
+            let productPrice = document.createElement('p');
+            productPrice.classList.add('col', 'fs-6')
+            productPrice.innerText = totalPerProduct + "€ ";
+            bottomProductLine.appendChild(productPrice);
+
+            let deleteArea = document.createElement('div');
+            deleteArea.classList.add('col', "text-end")
+            bottomProductLine.appendChild(deleteArea)
+
+            let deleteButton = document.createElement('button');
+            deleteButton.innerHTML = "<i class=\"bi bi-trash\"></i>"
+            deleteButton.classList.add('btn', 'fs-5', 'deleteButton')
+
+            deleteArea.appendChild(deleteButton)
+            
+        }
+
+    //------------------------- MONTANT TOTAL DU PANIER  -------------------------        
 
     // Calcul et affichage du montant total du panier
     let totalCart = 0;
@@ -68,7 +84,32 @@ else {
     totalCartSum.classList.add('pt-5', 'fw-bold', 'fs-5')
     totalCartSum.innerText = "Total du panier : " + totalCart + " €";
     cartContainer.appendChild(totalCartSum);
-
-
+    }
 
 }
+cartDisplay();
+
+//------------------------- SUPPRESSION DES PRODUITS DANS LE PANIER -------------------------
+
+// Suppression des produits individuellement ----------
+let deleteButtons = document.querySelectorAll('.deleteButton')
+function productRemove() {
+    for (let m = 0; m < deleteButtons.length; m++) {
+        deleteButtons[m].addEventListener('click', function(e) {
+            e.preventDefault();
+            let id = productsInCart[m].productId;
+            productsInCart.splice(id, 1);
+            
+            // enregistrement du localStorage
+            localStorage.setItem('product', JSON.stringify(productsInCart));
+            
+            // message de confirmation
+            alert(" L'article a bien été supprimé du panier !")
+
+            // on rafraîchit la page
+            location.reload();
+        })
+    }
+}
+productRemove();
+
