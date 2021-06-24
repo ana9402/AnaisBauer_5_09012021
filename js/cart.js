@@ -1,6 +1,6 @@
 let productsInCart = JSON.parse(localStorage.getItem('product'));
 
-//------------------------- AFFICHAGE DES PRODUITS DANS LE  PANIER -------------------------
+//------------------------- AFFICHAGE DU PANIER -------------------------//
 
 let cartContainer = document.getElementById('cart-container');
 
@@ -14,14 +14,32 @@ function cartDisplay() {
     } 
     // Si le localStorage contient des produits ----------
     else {
-        
+
+        /// Quantité totale d'articles dans le panier ///
+        let totalQuantity = 0;
+        for (let l = 0; l < productsInCart.length; l++) {
+            totalQuantity = totalQuantity + productsInCart[l].productQuantity;
+        }
+
+        console.log(totalQuantity)
+
+        let cartQuantity = document.createElement('p');
+        cartQuantity.classList.add('mb-4', 'fst-italic')
+        if (totalQuantity === 1) {
+            cartQuantity.innerText = "Votre panier contient 1 article.";
+        } else if (totalQuantity > 1) {
+            cartQuantity.innerText = "Votre panier contient " + totalQuantity + " articles.";
+        }
+        cartContainer.appendChild(cartQuantity)
+
+        /// Affichage des cartes des produits ///
         for (k = 0; k < productsInCart.length; k++) {
 
             let productLine = document.createElement('div');
             productLine.classList.add('row', 'd-flex', 'border');
             cartContainer.appendChild(productLine);
 
-            // Colonne IMG ---
+            // Colonne IMG
             let productImgContainer = document.createElement('div');
             productImgContainer.classList.add('col-md-4', 'p-0')
             productLine.appendChild(productImgContainer);
@@ -31,7 +49,7 @@ function cartDisplay() {
             productImg.src = productsInCart[k].productImage;
             productImgContainer.appendChild(productImg);
 
-            // Colonne INFOS ---
+            // Colonne INFOS
             let productInfosContainer = document.createElement('div')
             productInfosContainer.classList.add('col', 'p-3')
             productLine.appendChild(productInfosContainer);
@@ -72,24 +90,23 @@ function cartDisplay() {
             
         }
 
-    //------------------------- MONTANT TOTAL DU PANIER  -------------------------        
+        /// Montant total du panier en € ///
+        let totalCart = 0;
+        for (let l = 0; l < productsInCart.length; l++) {
+            totalCart = totalCart + (productsInCart[l].productPrice * productsInCart[l].productQuantity);
+        }
 
-    // Calcul et affichage du montant total du panier
-    let totalCart = 0;
-    for (let l = 0; l < productsInCart.length; l++) {
-        totalCart = totalCart + (productsInCart[l].productPrice * productsInCart[l].productQuantity);
-    }
+        let totalCartSum = document.createElement('p')
+        totalCartSum.classList.add('pt-5', 'fw-bold', 'fs-5')
+        totalCartSum.innerText = "Total du panier : " + totalCart + " €";
+        cartContainer.appendChild(totalCartSum);
 
-    let totalCartSum = document.createElement('p')
-    totalCartSum.classList.add('pt-5', 'fw-bold', 'fs-5')
-    totalCartSum.innerText = "Total du panier : " + totalCart + " €";
-    cartContainer.appendChild(totalCartSum);
     }
 
 }
 cartDisplay();
 
-//------------------------- SUPPRESSION DES PRODUITS DANS LE PANIER -------------------------
+//------------------------- SUPPRESSION DES PRODUITS DANS LE PANIER -------------------------//
 
 // Suppression des produits individuellement ----------
 let deleteButtons = document.querySelectorAll('.deleteButton')
