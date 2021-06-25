@@ -21,16 +21,26 @@ function cartDisplay() {
             totalQuantity = totalQuantity + productsInCart[l].productQuantity;
         }
 
-        console.log(totalQuantity)
+        let quantityRow = document.createElement('div')
+        quantityRow.classList.add('row', 'mb-4')
+        cartContainer.appendChild(quantityRow)
 
-        let cartQuantity = document.createElement('p');
-        cartQuantity.classList.add('mb-4', 'fst-italic')
+        let cartQuantity = document.createElement('div');
+        cartQuantity.classList.add('col', 'mb-3', 'mb-md-0', 'fst-italic', 'd-flex', 'align-items-center')
         if (totalQuantity === 1) {
             cartQuantity.innerText = "Votre panier contient 1 article.";
         } else if (totalQuantity > 1) {
             cartQuantity.innerText = "Votre panier contient " + totalQuantity + " articles.";
         }
-        cartContainer.appendChild(cartQuantity)
+        quantityRow.appendChild(cartQuantity)
+
+        /// Bouton vider le panier ///
+        let clearCartButton = document. createElement('button');
+        clearCartButton.classList.add('col-md-3', 'btn', 'btn-secondary', 'border');
+        clearCartButton.id = "clear-cart-btn";
+        clearCartButton.innerHTML = "Vider le panier";
+        quantityRow.appendChild(clearCartButton)
+
 
         /// Affichage des cartes des produits ///
         for (k = 0; k < productsInCart.length; k++) {
@@ -130,3 +140,16 @@ function productRemove() {
 }
 productRemove();
 
+// Suppression du panier ----------
+let clearCartButton = document.getElementById('clear-cart-btn');
+clearCartButton.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    // demande de confirmation
+    if (confirm("Etes-vous sûr(e) de vouloir vider votre panier ?")) {
+        localStorage.removeItem('product');
+    }
+
+    // on rafraîchit la page
+    location.reload();
+})
