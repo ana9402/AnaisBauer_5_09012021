@@ -107,8 +107,6 @@ fetch("http://localhost:3000/api/cameras/" + productId)
     // création d'un événement au clic sur le bouton
     productBuyButton.addEventListener('click', function() {
 
-        let productsInCart = JSON.parse(localStorage.getItem('product'));
-
         /// s'il n'y a pas de produit dans le local storage
         if (productsInCart === null) {
             productsInCart = [];

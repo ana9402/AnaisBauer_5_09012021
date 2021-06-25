@@ -1,4 +1,3 @@
-let productsInCart = JSON.parse(localStorage.getItem('product'));
 
 //------------------------- AFFICHAGE DU PANIER -------------------------//
 
@@ -16,11 +15,6 @@ function cartDisplay() {
     else {
 
         /// Quantité totale d'articles dans le panier ///
-        let totalQuantity = 0;
-        for (let l = 0; l < productsInCart.length; l++) {
-            totalQuantity = totalQuantity + productsInCart[l].productQuantity;
-        }
-
         let quantityRow = document.createElement('div')
         quantityRow.classList.add('row', 'mb-4')
         cartContainer.appendChild(quantityRow)
