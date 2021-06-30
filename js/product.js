@@ -141,6 +141,8 @@ fetch("http://localhost:3000/api/cameras/" + productId)
 
             alert("Le produit a bien été ajouté au panier !")
             localStorage.setItem('product', JSON.stringify(productsInCart));
+
+            location.reload();
         } 
     });
 })
