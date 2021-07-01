@@ -1,6 +1,8 @@
-//*******************  VARIABLES *******************//
+//****************************** VARIABLES ******************************//
 
-let productsInCart = JSON.parse(localStorage.getItem('product')); // Récupération des produits dans le localStorage
+
+// Récupération des produits dans le localStorage
+let productsInCart = JSON.parse(localStorage.getItem('product')); 
 
 // Calcul de la quantité totale d'articles dans le panier
 let totalQuantity = 0;
@@ -10,8 +12,11 @@ if (productsInCart != null) {
     }
 }
 
-//*******************  FONCTIONS *******************//
 
+//****************************** FONCTIONS ******************************//
+
+
+// Affichage de la quantité d'articles dans le panier
 function cartQuantityDisplay() {
 
     let cartLink = document.getElementById('cart-link');

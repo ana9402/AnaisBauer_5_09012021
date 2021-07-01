@@ -1,5 +1,5 @@
 
-//------------------------- AFFICHAGE DU PANIER -------------------------//
+//****************************** AFFICHAGE DU PANIER ******************************//
 
 let cartContainer = document.getElementById('cart-container');
 
@@ -11,6 +11,7 @@ if (productsInCart === null || productsInCart.length === 0) {
     emptyCart.innerText = 'Votre panier est vide.';
     cartContainer.appendChild(emptyCart);
 } 
+
 // Si le localStorage contient des produits ----------
 else {
 
@@ -73,21 +74,54 @@ else {
         productDescription.innerText = product.productDescription;
         productInfosContainer.appendChild(productDescription);
 
-        // Quantité du produit
+        // Conteneur pour la quantité du produit
+        let productQuantityContainer = document.createElement('div')
+        productQuantityContainer.classList.add('d-flex', "gap-3", 'mb-3')
+        productInfosContainer.appendChild(productQuantityContainer)
+
+        // Réduire la quantité 
+        let lessQuantityButton = document.createElement('button')
+        lessQuantityButton.classList.add('btn', 'btn-dark', 'px-2')
+        lessQuantityButton.innerText = "-";
+        productQuantityContainer.appendChild(lessQuantityButton)
+
+        lessQuantityButton.addEventListener('click', function() {
+            reduceQuantity(product)
+            
+            if (product.productQuantity ===0) {
+                remove(product);
+                
+            }
+        })
+
+        // Afficher la quantité
         let productQuantity = document.createElement('p');
-        productQuantity.innerText = "Quantité : " + product.productQuantity;
-        productInfosContainer.appendChild(productQuantity);
+        productQuantity.classList.add('my-auto')
+        productQuantity.innerText = product.productQuantity;
+        productQuantityContainer.appendChild(productQuantity);
 
-        let totalPerProduct = (product.productPrice * product.productQuantity)
 
-        // Ligne du bas
+        // Augmenter la quantité
+        let moreQuantityButton = document.createElement('button')
+        moreQuantityButton.classList.add('btn', 'btn-dark', 'px-2')
+        moreQuantityButton.innerText = "+";
+        productQuantityContainer.appendChild(moreQuantityButton)
+
+        moreQuantityButton.addEventListener('click', function() {
+            addQuantity(product)
+        })
+
+        // Conteneur prix + corbeille
         let bottomProductLine = document.createElement('div');
         bottomProductLine.classList.add('row')
         productInfosContainer.appendChild(bottomProductLine)
 
         // Prix total par type de produit
+
+        let totalPerProduct = (product.productPrice * product.productQuantity)
+
         let productPrice = document.createElement('p');
-        productPrice.classList.add('col', 'fs-6')
+        productPrice.classList.add('col', 'fs-6','my-auto')
         productPrice.innerText = totalPerProduct + "€ ";
         bottomProductLine.appendChild(productPrice);
 
@@ -121,9 +155,11 @@ else {
 
 }
 
-//------------------------- SUPPRESSION DES PRODUITS DANS LE PANIER -------------------------//
 
-// Suppression des produits individuellement ----------
+//****************************** FONCTIONS ******************************//
+
+
+// Suppression des produits individuellement ---
 function remove(item) {
     let index = productsInCart.indexOf(item);
     productsInCart.splice(index, 1);
@@ -139,7 +175,7 @@ function remove(item) {
 }
 
 
-// Suppression du panier ----------
+// Vider le panier ---
 let clearCartButton = document.getElementById('clear-cart-btn');
 clearCartButton.addEventListener('click', function(e) {
     e.preventDefault();
@@ -152,3 +188,17 @@ clearCartButton.addEventListener('click', function(e) {
     // on rafraîchit la page
     location.reload();
 })
+
+// Augmenter les quantités d'un article ---
+function addQuantity(item) {
+    item.productQuantity++;
+    localStorage.setItem('product', JSON.stringify(productsInCart));
+    location.reload();
+}
+
+// Diminuer les quantités d'un article ---
+function reduceQuantity(item) {
+    item.productQuantity--;
+    localStorage.setItem('product', JSON.stringify(productsInCart));
+    location.reload();
+}
