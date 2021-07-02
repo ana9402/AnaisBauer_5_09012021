@@ -5,7 +5,7 @@ let cartContainer = document.getElementById('cart-container');
 
 
 // Si le localStorage est vide ----------
-if (productsInCart === null || productsInCart.length === 0) {
+if (productsInCart == null || productsInCart.length == 0) {
     
     let emptyCart = document.createElement('p');
     emptyCart.innerText = 'Votre panier est vide.';
@@ -156,6 +156,21 @@ else {
 }
 
 
+//****************************** CONFIGURATION DU FORMULAIRE ******************************//
+
+let form = document.getElementsByTagName('form')
+let fieldset = document.querySelector('fieldset');
+let submitButton = document.getElementById('submit-btn');
+
+
+// Désactivation du formulaire si le panier est vide ----------
+if (productsInCart == null || productsInCart == 0) {
+    
+    // Désactiver le formulaire
+    fieldset.setAttribute('disabled', '');
+}
+
+
 //****************************** FONCTIONS ******************************//
 
 
@@ -202,3 +217,4 @@ function reduceQuantity(item) {
     localStorage.setItem('product', JSON.stringify(productsInCart));
     location.reload();
 }
+
