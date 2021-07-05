@@ -161,7 +161,11 @@ else {
 let form = document.getElementsByTagName('form')
 let fieldset = document.querySelector('fieldset');
 let submitButton = document.getElementById('submit-btn');
-
+let firstNameField = document.getElementById('first-name')
+let lastNameField = document.getElementById('last-name')
+let emailField = document.getElementById('email-adress')
+let zipCodeField = document.getElementById('zip-code')
+let cityField = document.getElementById('city')
 
 // Désactivation du formulaire si le panier est vide ----------
 if (productsInCart == null || productsInCart == 0) {
@@ -169,6 +173,36 @@ if (productsInCart == null || productsInCart == 0) {
     // Désactiver le formulaire
     fieldset.setAttribute('disabled', '');
 }
+
+// Vérification de la validité des champs ----------
+
+// Prénom
+firstNameField.addEventListener('change', function() {
+    isValidGlobal(this)
+})
+
+// Nom
+lastNameField.addEventListener('change', function() {
+    isValidGlobal(this)
+})
+
+// Email
+emailField.addEventListener('change', function() {
+    isValidEmail(this)
+})
+
+// Code postal
+zipCodeField.addEventListener('change', function() {
+    isValidZipCode(this)
+})
+
+// Ville
+cityField.addEventListener('change', function() {
+    isValidGlobal(this)
+})
+
+// Affichage du message d'erreur
+
 
 
 //****************************** FONCTIONS ******************************//
@@ -218,3 +252,22 @@ function reduceQuantity(item) {
     location.reload();
 }
 
+// Configuration des RegExp ---
+
+function isValidGlobal(input) {
+    let validGlobal = /^[^-\s][a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/;
+    let testGlobal = validGlobal.test(input.value);
+    console.log(testGlobal)
+}
+
+function isValidEmail(input) {
+    let validEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    let testEmail = validEmail.test(input.value)
+    console.log(testEmail)
+}
+
+function isValidZipCode(input) {
+    let validZipCode = /^(?:[0-8]\d|9[0-8])\d{3}$/;
+    let testZipCode = validZipCode.test(input.value)
+    console.log(testZipCode)
+}
