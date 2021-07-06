@@ -159,13 +159,21 @@ else {
 //****************************** CONFIGURATION DU FORMULAIRE ******************************//
 
 let form = document.getElementsByTagName('form')
-let fieldset = document.querySelector('fieldset');
-let submitButton = document.getElementById('submit-btn');
+let fieldset = document.querySelector('fieldset')
+let inputs = document.querySelectorAll('form inputs')
+let submitButton = document.getElementById('submit-btn')
 let firstNameField = document.getElementById('first-name')
 let lastNameField = document.getElementById('last-name')
 let emailField = document.getElementById('email-adress')
+let adressField = document.getElementById('adress')
 let zipCodeField = document.getElementById('zip-code')
 let cityField = document.getElementById('city')
+let firstNameError = document.getElementById('first-name-error')
+let lastNameError = document.getElementById('last-name-error')
+let emailError = document.getElementById('email-error')
+let adressError = document.getElementById('adress-error')
+let zipCodeError = document.getElementById('zip-code-error')
+let cityError = document.getElementById('city-error')
 
 // Désactivation du formulaire si le panier est vide ----------
 if (productsInCart == null || productsInCart == 0) {
@@ -174,35 +182,45 @@ if (productsInCart == null || productsInCart == 0) {
     fieldset.setAttribute('disabled', '');
 }
 
-// Vérification de la validité des champs ----------
+
+// Vérification de la validité des champs (Regex) ----------
 
 // Prénom
 firstNameField.addEventListener('change', function() {
-    isValidGlobal(this)
+    isValidGlobal(this, firstNameError)
+
 })
 
 // Nom
 lastNameField.addEventListener('change', function() {
-    isValidGlobal(this)
+    isValidGlobal(this, lastNameError)
 })
 
 // Email
 emailField.addEventListener('change', function() {
-    isValidEmail(this)
+    isValidEmail(this, emailError)
 })
 
 // Code postal
 zipCodeField.addEventListener('change', function() {
-    isValidZipCode(this)
+    isValidZipCode(this, zipCodeError)
 })
 
 // Ville
 cityField.addEventListener('change', function() {
-    isValidGlobal(this)
+    isValidGlobal(this, cityError)
 })
 
-// Affichage du message d'erreur
 
+// Evénement au clic sur le bouton de validation ----------
+submitButton.addEventListener('click', function () {
+    emptyField(firstNameField, firstNameError)
+    emptyField(lastNameField, lastNameError)
+    emptyField(emailField, emailError)
+    emptyField(adressField, adressError)
+    emptyField(zipCodeField, zipCodeError)
+    emptyField(cityField, cityError)
+})
 
 
 //****************************** FONCTIONS ******************************//
@@ -254,20 +272,52 @@ function reduceQuantity(item) {
 
 // Configuration des RegExp ---
 
-function isValidGlobal(input) {
+function isValidGlobal(input, inputError) {
     let validGlobal = /^[^-\s][a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/;
-    let testGlobal = validGlobal.test(input.value);
-    console.log(testGlobal)
+
+    if (validGlobal.test(input.value) == false) {
+        input.classList.add('border-danger')
+        inputError.innerText = "Le champ n'est pas valide."
+    } else if (validGlobal.test(input.value) == true) {
+        input.classList.remove('border-danger')
+        input.classList.add('border-success')
+        inputError.innerText = "";
+    }
+    return validGlobal.test(input.value);
+
 }
 
-function isValidEmail(input) {
+function isValidEmail(input, inputError) {
     let validEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    let testEmail = validEmail.test(input.value)
-    console.log(testEmail)
+    if (validEmail.test(input.value) == false) {
+        input.classList.add('border-danger')
+        inputError.innerText = "Le champ n'est pas valide."
+    } else if (validEmail.test(input.value) == true) {
+        input.classList.remove('border-danger')
+        input.classList.add('border-success')
+        inputError.innerText = "";
+    }
+    return validEmail.test(input.value)
 }
 
-function isValidZipCode(input) {
+function isValidZipCode(input, inputError) {
     let validZipCode = /^(?:[0-8]\d|9[0-8])\d{3}$/;
-    let testZipCode = validZipCode.test(input.value)
-    console.log(testZipCode)
+    if (validZipCode.test(input.value) == false) {
+        input.classList.add('border-danger')
+        inputError.innerText = "Le champ n'est pas valide."
+    } else if (validZipCode.test(input.value) == true) {
+        input.classList.remove('border-danger')
+        input.classList.add('border-success')
+        inputError.innerText = "";
+    }
+    return validZipCode.test(input.value)
+}
+
+// Si les champs du formulaire sont vides au clic sur le bouton de validation ---
+function emptyField(fieldName, errorFieldName) {
+    if (fieldName.validity.valueMissing) {
+        console.log("Le champ est vide.")
+        errorFieldName.innerText = "Veuillez renseigner ce champ."
+        fieldName.classList.add('border-danger')
+    }
 }

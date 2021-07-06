@@ -76,26 +76,32 @@
                                         <div class="col-md-6">
                                             <label for="first-name" class="form-label">Prénom *</label>
                                             <input type="text" class="form-control" id="first-name" placeholder="Eric" minlength="2" maxlength="30" required>
+                                            <p id="first-name-error" class="small text-danger"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="last-name" class="form-label">Nom *</label>
                                             <input type="text" class="form-control" id="last-name" placeholder="Dupont" minlength="2" maxlength="30" required>
+                                            <p id="last-name-error" class="small text-danger"></p>
                                         </div>
                                         <div class="col-12">
                                             <label for="email-adress" class="form-label">E-mail *</label>
                                             <input type="email" class="form-control" id="email-adress" placeholder="exemple@gmail.com" required>
+                                            <p id="email-error" class="small text-danger"></p>
                                         </div>
                                         <div class="col-12">
                                             <label for="adress" class="form-label">Adresse postale *</label>
-                                            <input type="text" class="form-control" id="adress" placeholder="5 Avenue Anatole France" minlength="10" maxlength="50" required> 
+                                            <input type="text" class="form-control" id="adress" placeholder="5 Avenue Anatole France" minlength="10" maxlength="50" required>
+                                            <p id="adress-error" class="small text-danger"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="zip-code" class="form-label">Code postal *</label>
                                             <input type="number" class="form-control" id="zip-code" placeholder="75007" minlength="5" maxlength="5" required>
+                                            <p id="zip-code-error" class="small text-danger"></p>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="city" class="form-label">Ville *</label>
                                             <input type="text" class="form-control" id="city" placeholder="Paris"  minlength="2" maxlength="30" required>
+                                            <p id="city-error" class="small text-danger"></p>
                                         </div>
                                         <div class="mt-5">
                                             <button type="submit" class="btn btn-dark" id="submit-btn">Valider ma commande</button>
