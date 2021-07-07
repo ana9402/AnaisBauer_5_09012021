@@ -61,18 +61,11 @@
 
         <!--------- START Main --------->
             <main class="mb-5">
-                <div class="container">
-                    <div class="row">
-                        <div class="col text-center">
-                            <i class="bi bi-check-circle-fill fs-1 text-success"></i>
-                            <h1>Félicitations, votre commande est validée !</h1>
-                            <p>Votre commande a bien été prise en compte, et sera traitée dans les meilleurs délais. <br>Nous vous tiendrons informé(e) par mail de son expédition.</p>
-                            <p>
-                                <span class="fw-bold">N° de commande : </span>
-                                <span id="order-number"></span>
-                            </p>
-                        </div>
-                    </div>
+                <div class="container" id="status-container">
+                    <div class="row text-center" id="status-icon"></div>
+                    <div class="row text-center" id="status-title"></div>
+                    <div class="row text-center mb-5" id="status-text"></div>
+                    <div class="row text-center" id="status-btn"></div>
                 </div>
             </main>
         <!--------- END Main --------->
@@ -145,7 +138,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
 
         <script src="/js/global.js"></script>
-
+        <script src="/js/order-status.js"></script>
 
     </body>
 
