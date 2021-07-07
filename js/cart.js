@@ -1,4 +1,3 @@
-
 //****************************** AFFICHAGE DU PANIER ******************************//
 
 let cartContainer = document.getElementById('cart-container');
@@ -164,16 +163,17 @@ let inputs = document.querySelectorAll('form inputs')
 let submitButton = document.getElementById('submit-btn')
 let firstNameField = document.getElementById('first-name')
 let lastNameField = document.getElementById('last-name')
-let emailField = document.getElementById('email-adress')
-let adressField = document.getElementById('adress')
+let emailField = document.getElementById('email-address')
+let addressField = document.getElementById('address')
 let zipCodeField = document.getElementById('zip-code')
 let cityField = document.getElementById('city')
 let firstNameError = document.getElementById('first-name-error')
 let lastNameError = document.getElementById('last-name-error')
 let emailError = document.getElementById('email-error')
-let adressError = document.getElementById('adress-error')
+let addressError = document.getElementById('address-error')
 let zipCodeError = document.getElementById('zip-code-error')
 let cityError = document.getElementById('city-error')
+let order;
 
 // Désactivation du formulaire si le panier est vide ----------
 if (productsInCart == null || productsInCart == 0) {
@@ -183,43 +183,84 @@ if (productsInCart == null || productsInCart == 0) {
 }
 
 
-// Vérification de la validité des champs (Regex) ----------
+// Vérification de la validité des champs (regex) sur l'événement change ----------
 
-// Prénom
-firstNameField.addEventListener('change', function() {
-    isValidGlobal(this, firstNameError)
+let validation = false;
 
-})
+function checkInputs() {
+    // Prénom
+    firstNameField.addEventListener('change', function() {
+        isValidGlobal(this, firstNameError)
+    })
 
-// Nom
-lastNameField.addEventListener('change', function() {
-    isValidGlobal(this, lastNameError)
-})
+    // Nom
+    lastNameField.addEventListener('change', function() {
+        isValidGlobal(this, lastNameError)
+    })
 
-// Email
-emailField.addEventListener('change', function() {
-    isValidEmail(this, emailError)
-})
+    // Email
+    emailField.addEventListener('change', function() {
+        isValidEmail(this, emailError)
+    })
 
-// Code postal
-zipCodeField.addEventListener('change', function() {
-    isValidZipCode(this, zipCodeError)
-})
+    // Code postal
+    zipCodeField.addEventListener('change', function() {
+        isValidZipCode(this, zipCodeError)
+    })
 
-// Ville
-cityField.addEventListener('change', function() {
-    isValidGlobal(this, cityError)
-})
+    // Ville
+    cityField.addEventListener('change', function() {
+        isValidGlobal(this, cityError)
+    })
 
+    return validation;
+}
+checkInputs();
+
+//****************************** ENVOI DU FORMULAIRE ******************************//
 
 // Evénement au clic sur le bouton de validation ----------
-submitButton.addEventListener('click', function () {
+submitButton.addEventListener('click', function (e) {
+
+    // Vérification des champs vides
     emptyField(firstNameField, firstNameError)
     emptyField(lastNameField, lastNameError)
     emptyField(emailField, emailError)
-    emptyField(adressField, adressError)
+    emptyField(addressField, addressError)
     emptyField(zipCodeField, zipCodeError)
     emptyField(cityField, cityError)
+
+  
+
+    // Si les données ne sont pas validées
+    if (validation == false) {
+        e.preventDefault();
+        console.log("Les données ne sont pas valides.")
+    } 
+    // Si les données sont validées
+    else {
+        console.log("Les données sont valides")
+        e.preventDefault();
+        let productsList = [];
+
+        // Objet
+        order = {
+            contact: {
+                firstName: firstNameField.value,
+                lastName: lastNameField.value,
+                address: addressField.value,
+                city: cityField.value,
+                email: emailField.value
+            },
+            products: productsList
+        }
+
+        for (let q = 0; q < productsInCart.length; q++) {
+            productsList.push(productsInCart[q].productId)
+        }        
+        postData();
+    }
+
 })
 
 
@@ -278,10 +319,12 @@ function isValidGlobal(input, inputError) {
     if (validGlobal.test(input.value) == false) {
         input.classList.add('border-danger')
         inputError.innerText = "Le champ n'est pas valide."
+        validation = false;
     } else if (validGlobal.test(input.value) == true) {
         input.classList.remove('border-danger')
         input.classList.add('border-success')
         inputError.innerText = "";
+        validation = true;
     }
     return validGlobal.test(input.value);
 
@@ -292,10 +335,12 @@ function isValidEmail(input, inputError) {
     if (validEmail.test(input.value) == false) {
         input.classList.add('border-danger')
         inputError.innerText = "Le champ n'est pas valide."
+        validation = false;
     } else if (validEmail.test(input.value) == true) {
         input.classList.remove('border-danger')
         input.classList.add('border-success')
         inputError.innerText = "";
+        validation = true;
     }
     return validEmail.test(input.value)
 }
@@ -305,10 +350,12 @@ function isValidZipCode(input, inputError) {
     if (validZipCode.test(input.value) == false) {
         input.classList.add('border-danger')
         inputError.innerText = "Le champ n'est pas valide."
+        validation = false;
     } else if (validZipCode.test(input.value) == true) {
         input.classList.remove('border-danger')
         input.classList.add('border-success')
         inputError.innerText = "";
+        validation = true;
     }
     return validZipCode.test(input.value)
 }
@@ -316,8 +363,44 @@ function isValidZipCode(input, inputError) {
 // Si les champs du formulaire sont vides au clic sur le bouton de validation ---
 function emptyField(fieldName, errorFieldName) {
     if (fieldName.validity.valueMissing) {
-        console.log("Le champ est vide.")
         errorFieldName.innerText = "Veuillez renseigner ce champ."
         fieldName.classList.add('border-danger')
     }
+}
+
+// Envoi des données ---
+function postData() {
+    fetch("http://localhost:3000/api/cameras/order", {
+    method: "POST",
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(order)
+    })
+    .then(function(result) {
+        if (result.ok) {
+            return result.json();
+        }
+    })
+    .then(data => {
+        console.log(data)
+
+        // Récupération et stockage du numéro de commande
+        let orderId = data.orderId;
+        console.log(orderId)
+        let orderProducts = [];
+        orderProducts.push(orderId)
+        localStorage.setItem('orderId', JSON.stringify(orderProducts));
+
+        // Suppression des articles du local storage
+        localStorage.removeItem('product');
+
+        // Redirection
+        window.location.href = "./order-status.html"
+
+        console.log("Le POST fonctionne")
+    })
+    .catch(function(error) {
+        console.log(error)
+    })
 }
