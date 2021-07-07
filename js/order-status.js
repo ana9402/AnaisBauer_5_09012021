@@ -56,5 +56,5 @@ statusBtn.innerText = "Retour à l'accueil"
 statusBtnContainer.appendChild(statusBtn)
 
 statusBtn.addEventListener('click', function(e) {
-    window.location.href= "index.html"
+    window.location.href= "./index.html"
 })
