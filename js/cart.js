@@ -402,5 +402,6 @@ function postData() {
     })
     .catch(function(error) {
         console.log(error)
+        alert("Le serveur a rencontré une erreur. Veuillez réessayer plus tard.")
     })
 }
