@@ -1,6 +1,7 @@
 //****************************** AFFICHAGE DU PANIER ******************************//
 
 let cartContainer = document.getElementById('cart-container');
+let totalCart = 0;
 
 
 // Si le localStorage est vide ----------
@@ -142,7 +143,6 @@ else {
     }
 
     /// Montant total du panier en € ///
-    let totalCart = 0;
     for (let l = 0; l < productsInCart.length; l++) {
         totalCart = totalCart + (productsInCart[l].productPrice * productsInCart[l].productQuantity);
     }
@@ -153,7 +153,6 @@ else {
     cartContainer.appendChild(totalCartSum);
 
 }
-
 
 //****************************** CONFIGURATION DU FORMULAIRE ******************************//
 
@@ -257,7 +256,13 @@ submitButton.addEventListener('click', function (e) {
 
         for (let q = 0; q < productsInCart.length; q++) {
             productsList.push(productsInCart[q].productId)
-        }        
+        }
+
+        // Stockage du prix total du panier
+        let orderSum = []
+        orderSum.push(totalCart)
+        localStorage.setItem('totalCart', JSON.stringify(orderSum))
+
         postData();
     }
 

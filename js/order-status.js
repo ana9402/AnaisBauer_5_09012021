@@ -1,5 +1,6 @@
 // Récupération du numéro de commande dans le localStorage
 let orderId = JSON.parse(localStorage.getItem('orderId'))
+let totalCart = JSON.parse(localStorage.getItem('totalCart'))
 
 
 //****************************** AFFICHAGE DES ELEMENTS SUR LA PAGE ******************************//
@@ -28,8 +29,13 @@ if (orderId) {
     showOrderId.innerHTML = "<span class='fw-bold'>N° de commande : </span>" + orderId
     statusTextContainer.appendChild(showOrderId)
 
+    let showOrderTotal = document.createElement('p')
+    showOrderTotal.innerHTML = "<span class='fw-bold'>Montant total de la commande : </span>" + totalCart + " €"
+    statusTextContainer.appendChild(showOrderTotal)
+
     // Suppression de l'id du localStorage
     localStorage.removeItem('orderId')
+    localStorage.removeItem('totalCart')
 }
 
 // Si aucune commande n'a été passée ----------
