@@ -1,18 +1,30 @@
-// Récupération du numéro de commande dans le localStorage
+//****************************** VARIABLES ******************************//
+
+// Récupération du numéro de commande et du montant total de la commande dans le localStorage
 let orderId = JSON.parse(localStorage.getItem('orderId'))
-let totalCart = JSON.parse(localStorage.getItem('totalCart'))
-
-
-//****************************** AFFICHAGE DES ELEMENTS SUR LA PAGE ******************************//
-
+let totalCartSum = JSON.parse(localStorage.getItem('totalCartSum'))
+// Récupération des éléments du DOM
 let statusContainer = document.getElementById('status-container')
 let statusIconContainer = document.getElementById('status-icon')
 let statusTitleContainer = document.getElementById('status-title')
 let statusTextContainer = document.getElementById('status-text')
 let statusBtnContainer = document.getElementById('status-btn')
 
+//****************************** AFFICHAGE DES ELEMENTS SUR LA PAGE ******************************//
+
 // Si une commande vient d'être passée ----------
 if (orderId) {
+    displayOrderConfirmation()
+}
+// Si aucune commande n'a été passée ----------
+else {
+    displayLostMessage();
+}
+backHomeButton();
+
+
+// Affichage du message de confirmation de commande
+function displayOrderConfirmation() {
     let statusIcon = document.createElement('i')
     statusIcon.classList.add('col', 'bi', 'bi-check-circle-fill', 'fs-1', 'text-success')
     statusIconContainer.appendChild(statusIcon)
@@ -30,16 +42,17 @@ if (orderId) {
     statusTextContainer.appendChild(showOrderId)
 
     let showOrderTotal = document.createElement('p')
-    showOrderTotal.innerHTML = "<span class='fw-bold'>Montant total de la commande : </span>" + totalCart + " €"
+    showOrderTotal.innerHTML = "<span class='fw-bold'>Montant total de la commande : </span>" + totalCartSum + " €"
     statusTextContainer.appendChild(showOrderTotal)
 
     // Suppression de l'id du localStorage
     localStorage.removeItem('orderId')
-    localStorage.removeItem('totalCart')
+    localStorage.removeItem('totalCartSum')
 }
 
-// Si aucune commande n'a été passée ----------
-else {
+
+// Affichage du message d'erreur en cas de mauvaise redirection
+function displayLostMessage() {
     let statusIcon = document.createElement('i')
     statusIcon.classList.add('col', 'bi', 'bi-emoji-frown', 'fs-1')
     statusIconContainer.appendChild(statusIcon)
@@ -51,16 +64,15 @@ else {
     let statusText = document.createElement('p')
     statusText.innerHTML = "Il semblerait que vous vous soyez égaré(e) en naviguant sur notre site.<br> Pas de panique ! Il vous suffit de cliquer sur le bouton ci-dessous pour retourner à l'accueil et découvrir notre sélection de produits."
     statusTextContainer.appendChild(statusText)
-
 }
 
-
-// Bouton de retour vers la page d'accueil
-let statusBtn = document.createElement('button')
-statusBtn.classList.add('col-md-3', 'btn', 'btn-dark', 'border', 'mx-auto')
-statusBtn.innerText = "Retour à l'accueil"
-statusBtnContainer.appendChild(statusBtn)
-
-statusBtn.addEventListener('click', function(e) {
-    window.location.href= "./index.html"
-})
+function backHomeButton () {
+    let statusBtn = document.createElement('button')
+    statusBtn.classList.add('col-md-3', 'btn', 'btn-dark', 'border', 'mx-auto')
+    statusBtn.innerText = "Retour à l'accueil"
+    statusBtnContainer.appendChild(statusBtn)
+    
+    statusBtn.addEventListener('click', function(e) {
+        window.location.href= "./index.html"
+    })
+}

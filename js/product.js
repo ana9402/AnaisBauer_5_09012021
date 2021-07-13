@@ -1,23 +1,35 @@
 // --------------- Récupération de l'ID de l'article dans l'URL ---------------
 const queryString = window.location.search;
-console.log(queryString);
 const urlParams = new URLSearchParams(queryString);
 const productId = urlParams.get('id');
-console.log(productId);
+
 
 // --------------- Récupération des données de l'API ---------------
-fetch("http://localhost:3000/api/cameras/" + productId)
-.then(
+function getProduct() {
+    fetch("http://localhost:3000/api/cameras/" + productId)
+    .then(
     function(result) {
         if (result.ok) {
             return result.json();
         }
-    }
-)
-.then(data => {
+    })
+    // Données
+    .then(data => {
+        console.log(data)
+        displayProduct(data)
+    })
 
-    // --------------- Mise en forme du produit ---------------
+    // Message d'erreur
+    .catch(error => {
+        console.log(error)
+        errorMessage('product-container')
+    });
+}
+getProduct()
 
+// --------------- Mise en forme du produit ---------------
+function displayProduct(data) {
+    
     /// Création d'une div pour la colonne de l'image
     let productImageContainer = document.createElement('div');
     productImageContainer.classList.add('col-md-7', 'p-0');
@@ -81,8 +93,7 @@ fetch("http://localhost:3000/api/cameras/" + productId)
     optionElement.value = data.lenses[i];
 
     optionSelect.appendChild(optionElement);
-}
-
+    }
 
     /// Création d'un bouton 
     let productBuyButton = document.createElement('button');
@@ -92,9 +103,14 @@ fetch("http://localhost:3000/api/cameras/" + productId)
 
     productInfosContainer.appendChild(productBuyButton);
 
+    productBuyButton.addEventListener('click', function() {
+        addToCart(data)
+    });
+}
 
-    // --------------- Ajout des articles dans le panier ---------------
-
+// --------------- Ajout des articles dans le panier ---------------
+function addToCart(data) {
+    
     let selectedProduct = {
         productImage: data.imageUrl,
         productName: data.name,
@@ -104,78 +120,33 @@ fetch("http://localhost:3000/api/cameras/" + productId)
         productPrice: data.price /100
     };
 
-    // création d'un événement au clic sur le bouton
-    productBuyButton.addEventListener('click', function() {
+    /// s'il n'y a pas de produit dans le local storage
+    if (productsInCart === null) {
+        productsInCart = [];
+        productsInCart.push(selectedProduct);
+    }
 
-        /// s'il n'y a pas de produit dans le local storage
-        if (productsInCart === null) {
-            productsInCart = [];
-            productsInCart.push(selectedProduct);
-            localStorage.setItem('product', JSON.stringify(productsInCart));
-            alert("L'article a bien été ajouté au panier");
-            location.reload();
+    /// s'il y a des produits dans le local storage
+    else {
+        let alreadyInCart = false;
+
+        //// Si le produit sélectionné est déjà présent dans le panier
+        for (j = 0; j < productsInCart.length; j++) {
+            
+            if (selectedProduct.productId == productsInCart[j].productId) {
+                productsInCart[j].productQuantity++;
+                alreadyInCart = true;
+                location.reload();
+                break;
+            }
         }
 
-        /// s'il y a des produits dans le local storage
-        else {
-            let alreadyInCart = false;
-
-            //// Si le produit sélectionné est déjà présent dans le panier
-            for (j = 0; j < productsInCart.length; j++) {
-                
-                if (selectedProduct.productId == productsInCart[j].productId) {
-                    productsInCart[j].productQuantity++;
-                    alreadyInCart = true;
-                    location.reload();
-                    break;
-                }
-            }
-
-            //// Si le produit sélectionné n'est pas présent dans le panier
-            if (!alreadyInCart) {
-
-                productsInCart.push(selectedProduct);
-                localStorage.setItem('product', JSON.stringify(productsInCart));
-                
-            }
-
-            alert("Le produit a bien été ajouté au panier !")
-            localStorage.setItem('product', JSON.stringify(productsInCart));
-
-            location.reload();
-        } 
-    });
-})
-
-/// --------- Configuration du message d'erreur ---------
-.catch(
-    function(error) {
-
-        ////// Création d'une div avec une classe col
-        let col = document.createElement('div');
-        col.classList.add('col', 'text-center', 'bg-light', 'text-secondary', 'p-4', 'border')
-
-        let errorContainer = document.getElementById('product-container');
-        errorContainer.appendChild(col);
-
-        ////// Création d'un paragraphe pour l'icone du message d'erreur
-        let errorIcon = document.createElement('p')
-        errorIcon.classList.add('fs-1')
-        errorIcon.innerHTML = "<i class=\"bi bi-emoji-frown-fill\"></i>";
-
-        col.appendChild(errorIcon);
-
-        ////// Création d'un h2 pour le titre du message d'erreur
-        let errorTitle = document.createElement('h2')
-        errorTitle.classList.add('fs-3');
-        errorTitle.innerHTML = "Oups, une erreur est survenue.";
-
-        col.appendChild(errorTitle)
-
-        ////// Création d'un paragraphe pour le contenu du message d'erreur
-        let errorContent = document.createElement('p');
-        errorContent.innerHTML = "Notre site rencontre actuellement un problème lié au serveur.<br> Nous vous prions de nous excuser pour la gêne occasionnée et vous invitons à réessayer ultérieurement.";
-
-        col.appendChild(errorContent);
-    }
-);
+        //// Si le produit sélectionné n'est pas présent dans le panier
+        if (!alreadyInCart) {
+            productsInCart.push(selectedProduct);
+        }
+    } 
+    localStorage.setItem('product', JSON.stringify(productsInCart));
+    alert("L'article a bien été ajouté au panier");
+    location.reload();
+}
