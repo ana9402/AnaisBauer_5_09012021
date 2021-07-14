@@ -10,23 +10,23 @@ function getTotalQuantity() {
             totalQuantity = totalQuantity + productsInCart[l].productQuantity;
         }
     }
+    return totalQuantity;
 }
 getTotalQuantity();
 
 // Affichage de la quantité d'articles dans le panier
-function displayTotalQuantity() {
-
+function displayQuantityOnHeader(quantity) {
     let cartLink = document.getElementById('cart-link');
     let cartQuantity = document.createElement('span');
     cartLink.appendChild(cartQuantity)
 
-    if (totalQuantity === 0) {
+    if (quantity === 0) {
         cartQuantity.innerText = "(0)";
-    } else if (totalQuantity > 0) {
-        cartQuantity.innerText = "(" + totalQuantity + ")";
+    } else if (quantity > 0) {
+        cartQuantity.innerText = "(" + quantity + ")";
     }
 }
-displayTotalQuantity();
+displayQuantityOnHeader(totalQuantity);
 
 // Affichage d'un message d'erreur en cas d'échec de la requête API
 function errorMessage(messageContainer) {

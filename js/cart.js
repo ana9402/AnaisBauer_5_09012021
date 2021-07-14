@@ -187,7 +187,7 @@ let validGlobal = /^[^-\s][a-zA-Zàáâäãåąčćęèéêëėįìíîïłńò�
 let validEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 let validZipCode = /^(?:[0-8]\d|9[0-8])\d{3}$/;
 
-function checkInputs() {
+function checkRegex() {
     // Prénom
     firstNameField.addEventListener('change', function() {
         regexValidation(validGlobal, this, firstNameError)
@@ -214,7 +214,7 @@ function checkInputs() {
     })
 
 }
-checkInputs();
+checkRegex();
 
 
 //****************************** ENVOI DU FORMULAIRE ******************************//
@@ -222,7 +222,7 @@ checkInputs();
 // Evénement au clic sur le bouton de validation ----------
 submitButton.addEventListener('click', function (e) {
 
-    // Vérification des champs vides
+    // On affiche un message d'erreur si les champs sont vides
     emptyField(firstNameField, firstNameError)
     emptyField(lastNameField, lastNameError)
     emptyField(emailField, emailError)
@@ -230,15 +230,20 @@ submitButton.addEventListener('click', function (e) {
     emptyField(zipCodeField, zipCodeError)
     emptyField(cityField, cityError)
 
+    addressField.addEventListener('change', function() {
+        addressField.classList.remove('border-danger')
+        addressError.innerText = "";
+    })
+
+    // On vérifie que les champs ne sont pas vides ou incorrects
     if (!firstNameField.value || !lastNameField.value || !emailField.value || !addressField.value || !zipCodeField.value || !cityField.value
         || !validGlobal.test(firstNameField.value) || !validGlobal.test(lastNameField.value) || !validEmail.test(emailField.value) || !validZipCode.test(zipCodeField.value) || !validGlobal.test(cityField.value) ) {
         console.log('Les champs ne sont pas remplis, ou sont invalides !')
         e.preventDefault();
     }
-    // Si les données sont validées
+    // Si les données sont validées, on lance la commande
     else {
         console.log("Les données sont valides")
-        e.preventDefault();
         let productsList = [];
 
         // Objet
@@ -262,7 +267,7 @@ submitButton.addEventListener('click', function (e) {
         orderSum.push(totalCartSum)
         localStorage.setItem('totalCartSum', JSON.stringify(orderSum))
 
-        postData();
+        postData("http://localhost:3000/api/cameras/order");
     }
 
 })
@@ -276,6 +281,7 @@ function getTotalCartSum() {
         product = productsInCart[product]
         totalCartSum = totalCartSum + (product.productPrice * product.productQuantity);
     }
+    return totalCartSum;
 }
 
 // Suppression des produits individuellement
@@ -292,7 +298,6 @@ function remove(item) {
     // on rafraîchit la page
     location.reload();
 }
-
 
 // Vider le panier ---
 function clearCart(e) {
@@ -344,8 +349,8 @@ function emptyField(fieldName, errorFieldName) {
 }
 
 // Envoi des données ---
-function postData() {
-    fetch("http://localhost:3000/api/cameras/order", {
+function postData(url) {
+    fetch(url, {
     method: "POST",
     headers: {
         'Content-Type': 'application/json'
@@ -377,5 +382,6 @@ function postData() {
     })
     .catch(function(error) {
         console.log(error)
+        alert('Erreur de connexion au serveur')
     })
 }

@@ -5,8 +5,8 @@ const productId = urlParams.get('id');
 
 
 // --------------- Récupération des données de l'API ---------------
-function getProduct() {
-    fetch("http://localhost:3000/api/cameras/" + productId)
+function getProduct(url, productId) {
+    fetch(url + productId)
     .then(
     function(result) {
         if (result.ok) {
@@ -16,7 +16,7 @@ function getProduct() {
     // Données
     .then(data => {
         console.log(data)
-        displayProduct(data)
+        displayProduct(data, data.lenses, "la lentille")
     })
 
     // Message d'erreur
@@ -25,10 +25,10 @@ function getProduct() {
         errorMessage('product-container')
     });
 }
-getProduct()
+getProduct("http://localhost:3000/api/cameras/", productId)
 
 // --------------- Mise en forme du produit ---------------
-function displayProduct(data) {
+function displayProduct(data, option, optionName) {
     
     /// Création d'une div pour la colonne de l'image
     let productImageContainer = document.createElement('div');
@@ -78,7 +78,7 @@ function displayProduct(data) {
 
     let optionLabel = document.createElement('label');
     optionLabel.classList.add('me-3')
-    optionLabel.innerText = "Personnalisez la lentille :"
+    optionLabel.innerText = "Sélectionnez " + optionName + " :"
 
     optionForm.appendChild(optionLabel);
 
@@ -87,10 +87,10 @@ function displayProduct(data) {
     optionForm.appendChild(optionSelect);
 
     /// affichage des options
-    for (i = 0; i < data.lenses.length; i++) {
+    for (i = 0; i < option.length; i++) {
     let optionElement = document.createElement('option');
-    optionElement.innerText = data.lenses[i];
-    optionElement.value = data.lenses[i];
+    optionElement.innerText = option[i];
+    optionElement.value = option[i];
 
     optionSelect.appendChild(optionElement);
     }

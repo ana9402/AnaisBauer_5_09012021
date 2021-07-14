@@ -1,6 +1,6 @@
 /// --------- Utilisation de fetch avec la méthode GET pour récupérer les données de l'API ---------
-function getCameras() {
-    fetch("http://localhost:3000/api/cameras")
+function getCameras(url) {
+    fetch(url)
     .then(result => {
         if (result.ok) {
             return result.json();
@@ -13,14 +13,12 @@ function getCameras() {
     .catch(error => {
         console.log(error)
         errorMessage("products-list");
-    
     });
 }
-getCameras()
+getCameras("http://localhost:3000/api/cameras")
 
 function displayCameras(data) {
     for (let i = 0; i < data.length; i++) { 
-
         ////// Creation d'une div avec une classe col
         let col = document.createElement('div'); 
         col.classList.add('col-12', 'col-md-6', 'col-lg-4', 'mb-5');

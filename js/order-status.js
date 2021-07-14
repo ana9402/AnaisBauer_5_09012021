@@ -12,19 +12,21 @@ let statusBtnContainer = document.getElementById('status-btn')
 
 //****************************** AFFICHAGE DES ELEMENTS SUR LA PAGE ******************************//
 
-// Si une commande vient d'être passée ----------
-if (orderId) {
-    displayOrderConfirmation()
+function displayOrderStatus() {
+    // Si une commande vient d'être passée ----------
+    if (orderId) {
+        orderConfirmation(orderId, totalCartSum)
+    }
+    // Si aucune commande n'a été passée ----------
+    else {
+        lostMessage();
+    }
+    backHomeButton();
 }
-// Si aucune commande n'a été passée ----------
-else {
-    displayLostMessage();
-}
-backHomeButton();
-
+displayOrderStatus();
 
 // Affichage du message de confirmation de commande
-function displayOrderConfirmation() {
+function orderConfirmation(id, sum) {
     let statusIcon = document.createElement('i')
     statusIcon.classList.add('col', 'bi', 'bi-check-circle-fill', 'fs-1', 'text-success')
     statusIconContainer.appendChild(statusIcon)
@@ -38,11 +40,11 @@ function displayOrderConfirmation() {
     statusTextContainer.appendChild(statusText)
 
     let showOrderId = document.createElement('p')
-    showOrderId.innerHTML = "<span class='fw-bold'>N° de commande : </span>" + orderId
+    showOrderId.innerHTML = "<span class='fw-bold'>N° de commande : </span>" + id
     statusTextContainer.appendChild(showOrderId)
 
     let showOrderTotal = document.createElement('p')
-    showOrderTotal.innerHTML = "<span class='fw-bold'>Montant total de la commande : </span>" + totalCartSum + " €"
+    showOrderTotal.innerHTML = "<span class='fw-bold'>Montant total de la commande : </span>" + sum + " €"
     statusTextContainer.appendChild(showOrderTotal)
 
     // Suppression de l'id du localStorage
@@ -52,7 +54,7 @@ function displayOrderConfirmation() {
 
 
 // Affichage du message d'erreur en cas de mauvaise redirection
-function displayLostMessage() {
+function lostMessage() {
     let statusIcon = document.createElement('i')
     statusIcon.classList.add('col', 'bi', 'bi-emoji-frown', 'fs-1')
     statusIconContainer.appendChild(statusIcon)
