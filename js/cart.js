@@ -180,55 +180,29 @@ let zipCodeError = document.getElementById('zip-code-error')
 let cityError = document.getElementById('city-error')
 let order;
 
-
-
 // Vérification de la validité des champs (regex) sur l'événement change ----------
 let validGlobal = /^[^-\s][a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/;
 let validEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 let validZipCode = /^(?:[0-8]\d|9[0-8])\d{3}$/;
 
-function checkRegex() {
-    // Prénom
-    firstNameField.addEventListener('change', function() {
-        regexValidation(validGlobal, this, firstNameError)
+function checkRegexOnChange(input, regex, inputError) {
+    input.addEventListener('change', function() {
+        regexValidation(regex, input, inputError)
     })
-
-    // Nom
-    lastNameField.addEventListener('change', function() {
-        regexValidation(validGlobal, this, lastNameError)
-    })
-
-    // Email
-    emailField.addEventListener('change', function() {
-        regexValidation(validEmail, this, emailError)
-    })
-
-    // Code postal
-    zipCodeField.addEventListener('change', function() {
-        regexValidation(validZipCode, this, zipCodeError)
-    })
-
-    // Ville
-    cityField.addEventListener('change', function() {
-        regexValidation(validGlobal, this, cityError)
-    })
-
 }
-checkRegex();
+checkRegexOnChange(firstNameField, validGlobal, firstNameError);
+checkRegexOnChange(lastNameField, validGlobal, lastNameError);
+checkRegexOnChange(emailField, validEmail, emailError);
+checkRegexOnChange(zipCodeField, validZipCode, zipCodeError);
+checkRegexOnChange(cityField, validGlobal, cityError);
 
 
 //****************************** ENVOI DU FORMULAIRE ******************************//
 
 // Evénement au clic sur le bouton de validation ----------
-submitButton.addEventListener('click', function (e) {
+submitButton.addEventListener('click', validation);
 
-    // On affiche un message d'erreur si les champs sont vides
-    emptyField(firstNameField, firstNameError)
-    emptyField(lastNameField, lastNameError)
-    emptyField(emailField, emailError)
-    emptyField(addressField, addressError)
-    emptyField(zipCodeField, zipCodeError)
-    emptyField(cityField, cityError)
+function validation(e) {
 
     addressField.addEventListener('change', function() {
         addressField.classList.remove('border-danger')
@@ -238,8 +212,15 @@ submitButton.addEventListener('click', function (e) {
     // On vérifie que les champs ne sont pas vides ou incorrects
     if (!firstNameField.value || !lastNameField.value || !emailField.value || !addressField.value || !zipCodeField.value || !cityField.value
         || !validGlobal.test(firstNameField.value) || !validGlobal.test(lastNameField.value) || !validEmail.test(emailField.value) || !validZipCode.test(zipCodeField.value) || !validGlobal.test(cityField.value) ) {
-        console.log('Les champs ne sont pas remplis, ou sont invalides !')
         e.preventDefault();
+
+        // On affiche un message d'erreur si les champs sont vides
+        emptyField(firstNameField, firstNameError)
+        emptyField(lastNameField, lastNameError)
+        emptyField(emailField, emailError)
+        emptyField(addressField, addressError)
+        emptyField(zipCodeField, zipCodeError)
+        emptyField(cityField, cityError)
     }
     // Si les données sont validées, on lance la commande
     else {
@@ -267,13 +248,12 @@ submitButton.addEventListener('click', function (e) {
         orderSum.push(totalCartSum)
         localStorage.setItem('totalCartSum', JSON.stringify(orderSum))
 
-        postData("http://localhost:3000/api/cameras/order");
+        postData("http://localhost:3000/api/cameras/order", order);
     }
 
-})
+}
 
-
-//****************************** FONCTIONS ******************************//
+//****************************** FONCTIONNALITES ******************************//
 
 // Calcul du montant total du panier
 function getTotalCartSum() {
@@ -310,7 +290,6 @@ function clearCart(e) {
     }
 }
 
-
 // Augmenter les quantités d'un article ---
 function addQuantity(item) {
     item.productQuantity++;
@@ -326,36 +305,42 @@ function reduceQuantity(item) {
 }
 
 // Configuration des RegExp ---
-
-
 function regexValidation(regex, input, inputError) {
-    if (regex.test(input.value) == false) {
-        input.classList.add('border-danger')
-        inputError.innerText = "Le champ n'est pas valide."
-    } else if (regex.test(input.value) == true) {
+    let regexResult = false;
+    if (!input.validity.valueMissing) {
+        if (regex.test(input.value) == false) {
+            input.classList.add('border-danger')
+            inputError.innerText = "Le champ n'est pas valide."
+        } else if (regex.test(input.value) == true) {
+            input.classList.remove('border-danger')
+            input.classList.add('border-success')
+            inputError.innerText = "";
+            regexResult = true;
+        }
+    } else {
         input.classList.remove('border-danger')
-        input.classList.add('border-success')
+        input.classList.remove('border-success')
         inputError.innerText = "";
     }
-    return regex.test(input.value);
+    return regexResult;
 }
 
 // Si les champs du formulaire sont vides au clic sur le bouton de validation ---
-function emptyField(fieldName, errorFieldName) {
-    if (fieldName.validity.valueMissing) {
-        errorFieldName.innerText = "Veuillez renseigner ce champ."
-        fieldName.classList.add('border-danger')
+function emptyField(input, inputError) {
+    if (input.validity.valueMissing) {
+        inputError.innerText = "Veuillez renseigner ce champ."
+        input.classList.add('border-danger')
     }
 }
 
 // Envoi des données ---
-function postData(url) {
+function postData(url, data) {
     fetch(url, {
     method: "POST",
     headers: {
         'Content-Type': 'application/json'
     },
-    body: JSON.stringify(order)
+    body: JSON.stringify(data)
     })
     .then(function(result) {
         if (result.ok) {
@@ -363,7 +348,6 @@ function postData(url) {
         }
     })
     .then(data => {
-        console.log(data)
 
         // Récupération et stockage du numéro de commande
         let orderId = data.orderId;
@@ -376,9 +360,7 @@ function postData(url) {
         localStorage.removeItem('product');
 
         // Redirection
-        window.location.href = "./order-status.html"
-
-        console.log("Le POST fonctionne")
+        window.location.href = "./order-status.html?orderId=" + orderId
     })
     .catch(function(error) {
         console.log(error)

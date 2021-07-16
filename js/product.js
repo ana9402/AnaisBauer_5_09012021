@@ -3,7 +3,6 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const productId = urlParams.get('id');
 
-
 // --------------- Récupération des données de l'API ---------------
 function getProduct(url, productId) {
     fetch(url + productId)
@@ -15,7 +14,6 @@ function getProduct(url, productId) {
     })
     // Données
     .then(data => {
-        console.log(data)
         displayProduct(data, data.lenses, "la lentille")
     })
 
